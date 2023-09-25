@@ -9,15 +9,32 @@ import {
   View,
   Alert
 } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { BACKEND_URL } from "@env";
+
+import Main from "./Main";
 export default function LoginScreen() {
   const navigation = useNavigation();
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
+
+        if (token) {
+          navigation.replace("Main");
+        }
+      } catch (err) {
+        console.log("error message", err);
+      }
+    };
+    checkLoginStatus();
+  }, []);
+
   const [email, setemail] = useState("");
   const [password, setPassword] = useState("");
   const handleLogin = () => {
