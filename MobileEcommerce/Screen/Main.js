@@ -24,8 +24,14 @@ import ProductItems from "../Components/ProductItems";
 import axios from "axios";
 import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
+import jwt_decode from "jwt-decode";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { BACKEND_URL } from '@env'
 export default function Main() {
   const navigation = useNavigation();
+  const cart = useSelector((state) => state.cart.cart);
+  const [selectedAddress,setSelectedAdress] = useState("");
+  const [isModalVisible, setModalVisible] = useState(false);
   const [open, setOpen] = useState(false);
   const [category, setCategory] = useState("jewelery");
   const [items, setItems] = useState([
@@ -221,8 +227,27 @@ export default function Main() {
     fetchdata();
   }, []);
 
-  const cart = useSelector((state) => state.cart.cart);
-  const [isModalVisible, setModalVisible] = useState(false);
+
+
+  ////////////
+  const [addresses, setadresses] = useState([]);
+
+
+  useEffect(() => {
+    let extract = async () => {
+      let token = await AsyncStorage.getItem("authToken");
+      let id = await jwt_decode(token).userId;
+      await axios.get(`${BACKEND_URL}/addresses/${id}`).then((response) => {
+        const { addresses } = response.data;
+        setadresses(addresses);
+      }).catch((error)=>{
+      // console.warn('Login Please')
+      });
+    };
+    extract();
+  }, []);
+  console.log(addresses)
+  //////////
 
   return (
     <>
@@ -279,8 +304,8 @@ export default function Main() {
               onPress={() => setModalVisible(true)}
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
-                <Text style={{ fontSize: 13, fontWeight: "bold" }}>
-                  Deliver to Aman - Gorakhpur 273014
+                <Text style={{ fontSize: 13, fontWeight: "bold" }} numberOfLines={1}>
+                  Deliver to {selectedAddress?.name} - India {selectedAddress?.postalCode}
                 </Text>
                 <Entypo name="chevron-down" size={24} color="black" />
               </View>
@@ -506,7 +531,7 @@ export default function Main() {
                     justifyContent: "center",
                     alignItems: "center",
                     padding: 2,
-                    width:'100%'
+                    width: "100%",
                   },
                 ]}
               >
@@ -519,30 +544,139 @@ export default function Main() {
                   }}
                 ></Text>
               </Pressable>
-              <Text style={{ fontSize: 16, fontWeight: "500"  }}> Choose your Location</Text>
+              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+                {" "}
+                Choose your Location
+              </Text>
               <Text style={{ marginTop: 5, fontSize: 16, color: "gray" }}>
-              Select a delivery location to see product availabilty and delivery
-              options
-            </Text>
-            <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-            <Pressable style={{width:140,height:140,borderColor:'#D0D0D0',marginTop:10,borderWidth:1,padding:10,justifyContent:'center',alignItems:'center',marginLeft:10,flexDirection:'column',justifyContent:'space-around'}}>
-            <Entypo style={{fontWeight:600,color:'#0066B2'}} name="location-pin" size={30} color="black" />
-                 <Text style={{fontWeight:600,color:'#0066B2'}}>Add an Address or pick-up point</Text>
-            </Pressable>
-            </ScrollView>
-            <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-            <Entypo style={{fontWeight:600,color:'#0066B2'}} name="location-pin" size={30} color="black" />
-            <Text style={{color:'#0066b2',fontWeight:400}}>Enter an Indian pincode</Text>
-            </View>
-            <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-            <Ionicons style={{fontWeight:600,color:'#0066B2'}} name="location" size={30} color="black"/>
-            <Text style={{color:'#0066b2',fontWeight:400}}>Use My Current Location</Text>
-            </View>
-            <View style={{flexDirection:'row',alignItems:'center',gap:5}}>
-            <AntDesign style={{fontWeight:600,color:'#0066B2'}} name="earth" size={30} color="black" />
-            <Text style={{color:'#0066b2',fontWeight:400}}>Deliver OutSide of India</Text>
-            </View>
-            
+                Select a delivery location to see product availabilty and
+                delivery options
+              </Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                                {/* already added addresses */}
+            {addresses?.map((item, index) => (
+              <Pressable
+              onPress={() => setSelectedAdress(item)}
+                style={{
+                  width: 140,
+                  height: 140,
+                  borderColor: "#D0D0D0",
+                  borderWidth: 1,
+                  padding: 10,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: 3,
+                  marginRight: 15,
+                  marginTop: 10,
+                  backgroundColor:selectedAddress === item ? "#FBCEB1" : "white"
+                }}
+              >
+                <View
+                  style={{ flexDirection: "row", alignItems: "center", gap: 3 }}
+                >
+                  <Text style={{ fontSize: 13, fontWeight: "bold" }}>
+                    {item?.name}
+                  </Text>
+                  <Entypo name="location-pin" size={24} color="red" />
+                </View>
+
+                <Text
+                  numberOfLines={1}
+                  style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                >
+                  {item?.houseNo},{item?.landmark}
+                </Text>
+
+                <Text
+                  numberOfLines={1}
+                  style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                >
+                  {item?.street}
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                >
+                  India, Bangalore
+                </Text>
+                <Text
+                  numberOfLines={1}
+                  style={{ width: 130, fontSize: 13, textAlign: "center" }}
+                >
+                  {item?.postalCode}
+                </Text>
+              </Pressable>
+            ))}
+
+
+                <Pressable
+                  onPress={() => {setModalVisible(false);
+                    navigation.navigate("Address")}
+                  }
+                  style={{
+                    width: 140,
+                    height: 140,
+                    borderColor: "#D0D0D0",
+                    marginTop: 10,
+                    borderWidth: 1,
+                    padding: 10,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    marginLeft: 10,
+                    flexDirection: "column",
+                    justifyContent: "space-around",
+                  }}
+                >
+                  <Entypo
+                    style={{ fontWeight: 600, color: "#0066B2" }}
+                    name="location-pin"
+                    size={30}
+                    color="black"
+                  />
+                  <Text style={{ fontWeight: 600, color: "#0066B2" }}>
+                    Add an Address or pick-up point
+                  </Text>
+                </Pressable>
+              </ScrollView>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <Entypo
+                  style={{ fontWeight: 600, color: "#0066B2" }}
+                  name="location-pin"
+                  size={30}
+                  color="black"
+                />
+                <Text style={{ color: "#0066b2", fontWeight: 400 }}>
+                  Enter an Indian pincode
+                </Text>
+              </View>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <Ionicons
+                  style={{ fontWeight: 600, color: "#0066B2" }}
+                  name="location"
+                  size={30}
+                  color="black"
+                />
+                <Text style={{ color: "#0066b2", fontWeight: 400 }}>
+                  Use My Current Location
+                </Text>
+              </View>
+              <View
+                style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+              >
+                <AntDesign
+                  style={{ fontWeight: 600, color: "#0066B2" }}
+                  name="earth"
+                  size={30}
+                  color="black"
+                />
+                <Text style={{ color: "#0066b2", fontWeight: 400 }}>
+                  Deliver OutSide of India
+                </Text>
+              </View>
             </View>
           </View>
         </View>
