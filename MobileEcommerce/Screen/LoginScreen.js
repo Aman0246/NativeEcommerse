@@ -46,9 +46,10 @@ export default function LoginScreen() {
     axios
       .post(`${BACKEND_URL}/login`, user)
       .then((response) => {
-        console.log(response);
         const token = response.data.token;
+        const _id = response.data._id;
         AsyncStorage.setItem("authToken", token);
+        // AsyncStorage.setItem("_id",_id);
         navigation.replace("Main");
       })
       .catch((error) => {

@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import {  StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -13,6 +13,9 @@ import { Ionicons } from "@expo/vector-icons";
 import ProfileScreen from "../Screen/ProfileScreen";
 import ProductInfoScreen from "../Screen/ProductInfoScreen";
 import AddAddressScreen from "../Screen/AddAddressScreen";
+import AddressScreen from "../Screen/AddressScreen";
+import Confirm from "../Screen/Confirm";
+import Order from "../Screen/Order";
 export default function StackNavigator() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
@@ -96,6 +99,21 @@ export default function StackNavigator() {
           name="Address"
           options={{ headerShown: false }}
           component={AddAddressScreen}
+        />
+        <Stack.Screen
+          name="Add"
+          options={{ headerShown: false }}
+          component={AddressScreen}
+        />
+        <Stack.Screen
+          name="Confirm"
+          options={{ headerShown: false }}
+          component={Confirm}
+        />
+        <Stack.Screen
+          name="Order"
+          options={{ headerShown: false }}
+          component={Order}
         />
       </Stack.Navigator>
     </NavigationContainer>
