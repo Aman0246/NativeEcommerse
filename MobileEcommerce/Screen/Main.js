@@ -246,7 +246,7 @@ export default function Main() {
     };
     extract();
   }, []);
-  console.log(addresses)
+
   //////////
 
   return (
