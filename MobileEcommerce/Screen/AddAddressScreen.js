@@ -12,7 +12,8 @@ import { Feather, AntDesign } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
+
+import  BACKEND_URL from './backenduRL/URL'
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function AddAddressScreen() {

@@ -11,7 +11,7 @@ import {
 import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
+import  BACKEND_URL from './backenduRL/URL'
 import { useNavigation } from "@react-navigation/native";
 import jwt_decode from "jwt-decode";
 export default function AddressScreen() {

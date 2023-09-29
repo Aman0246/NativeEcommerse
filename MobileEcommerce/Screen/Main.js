@@ -26,7 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import jwt_decode from "jwt-decode";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { BACKEND_URL } from '@env'
+import  BACKEND_URL from './backenduRL/URL'
 export default function Main() {
   const navigation = useNavigation();
   const cart = useSelector((state) => state.cart.cart);

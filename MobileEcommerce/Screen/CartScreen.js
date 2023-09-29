@@ -15,7 +15,7 @@ import {
   decrementQuantity,
   incementQuantity,
   removeFromCart,
-} from "../redux/CartReducer";
+} from "../Redux/CartReducer";
 import { useNavigation } from "@react-navigation/native";
 
 const CartScreen = () => {
