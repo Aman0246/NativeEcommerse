@@ -15,9 +15,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
-import { BACKEND_URL } from "@env";
+import  BACKEND_URL from './backenduRL/URL'
 
-import Main from "./Main";
 export default function LoginScreen() {
   const navigation = useNavigation();
   useEffect(() => {

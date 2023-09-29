@@ -11,7 +11,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Ionicons, AntDesign } from "@expo/vector-icons";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import {BACKEND_URL} from '@env'
+import  BACKEND_URL from './backenduRL/URL'
 import jwt_decode from "jwt-decode";
 
 const ProfileScreen = () => {
